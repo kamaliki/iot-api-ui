@@ -5,7 +5,8 @@ import {useRouter} from 'next/router'
 
 function Devices() {
   const router = useRouter()
-  const deviceId = router.query['deviceId'] || ''
+  const deviceId = router.query['deviceId'] || '644'
+  console.log("devices here", deviceId)
 
   return (
     <div className='row'>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic'
+import { Console } from 'console';
 
 /* Wrap DevicePlot with a dynamic import to disable server-side rendering.
  * Prevents `self is undefined` errors caused by Giraffe when rendered
@@ -11,11 +12,14 @@ const DynamicDevicePlotWithNoSSR = dynamic(
 )
 
 export function Device({deviceId}: {deviceId: string | string[]}) {
+  console.log("device here ::::::::: ", deviceId)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [device, setDevice] = useState<any[] | null>(null)
   const [data, setData] = useState<string[] | []>([])
   deviceId = Array.isArray(deviceId) ? deviceId[0] : deviceId
+  console.log("device id: ", deviceId)
+  console.log("data ::::::::  ", data)
 
   useEffect(() => {
     deviceId && getDevice()
@@ -32,7 +36,8 @@ export function Device({deviceId}: {deviceId: string | string[]}) {
     setError(null)
     setIsLoading(true)
     const results: string[] = []
-    const fields  = ['Humidity', 'Pressure', 'Temperature']
+    console.log("results here ::::::",results)
+    const fields  = ['963', '1055', '965']
     fields.forEach(field => {
       getMeasurements(field)
       .then(res => {
@@ -71,7 +76,7 @@ export function Device({deviceId}: {deviceId: string | string[]}) {
     const query =
         `from(bucket: "${process.env.NEXT_PUBLIC_INFLUX_BUCKET}")
          |> range(start: -60d)
-         |> filter(fn: (r) => r._measurement == "environment" and r.device == "${deviceId}" )
+         |> filter(fn: (r) =>  r.site_id == "${deviceId}" )
          |> filter(fn: (r) => r._field == "${field}" )
          |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)
          |> yield(name: "mean")
@@ -115,7 +120,7 @@ export function Device({deviceId}: {deviceId: string | string[]}) {
         {data.map((csv, i) =>
           <div className='card-body'>
             <div key={`${i}-line`}><DynamicDevicePlotWithNoSSR csv={csv} plot='line' /></div>
-            <div key={`${i}-table`}><DynamicDevicePlotWithNoSSR csv={csv} plot='table' title='' /></div>
+            {/* <div key={`${i}-table`}><DynamicDevicePlotWithNoSSR csv={csv} plot='table' title='' /></div> */}
           </div>
       )}     
       </div>

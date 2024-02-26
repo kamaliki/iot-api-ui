@@ -24,8 +24,9 @@ export function DevicesCard() {
           <label htmlFor='findOrRegisterDevice_IdInput' className="form-label">
             Find or register a device ID
           </label>
-          <input type="text" id='findOrRegisterDevice_IdInput' name="register_deviceId" className="form-control col-md-10" onChange={ handleChange } />
+          <input type="text" id='findOrRegisterDevice_IdInput' name="register_deviceId" className="form-control col-md-10 bg-red-300" onChange={ handleChange } />
           <DeviceRegistrationButton deviceId={ deviceId } onError={ handleError } isLoading={ setIsLoading } />
+          {`Device ID: ${deviceId}`}
           <h5 className='mt-4'>Registered devices</h5>
           { isLoading && 
             <div className="alert"><span>Loading...</span></div>
